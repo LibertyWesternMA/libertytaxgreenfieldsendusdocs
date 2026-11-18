@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Send Us Your Documents – Liberty Tax Greenfield</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f4f5f7;
+    color: #1d1d1f;
+    display: flex;
+    justify-content: center;
+    padding: 32px 16px;
+  }
+  .card {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    border-radius: 16px;
+    padding: 28px 22px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.08);
+    text-align: center;
+  }
+  h1 { font-size: 1.4rem; margin: 0 0 6px; }
+  p.sub { margin: 0 0 22px; color: #555; font-size: .95rem; line-height: 1.4; }
+  a.btn, button.btn {
+    display: block;
+    width: 100%;
+    padding: 15px 16px;
+    margin: 0 0 12px;
+    border-radius: 12px;
+    border: none;
+    font-size: 1.05rem;
+    font-weight: 600;
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .mail    { background: #1a73e8; }
+  .gmail   { background: #d93025; }
+  .outlook { background: #0a5fb4; }
+  .yahoo   { background: #6001d2; }
+  .divider { margin: 22px 0 14px; color: #888; font-size: .9rem; }
+  .email {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-bottom: 10px;
+    word-break: break-all;
+    user-select: all;
+    -webkit-user-select: all;
+  }
+  button.copy { background: #e8eaed; color: #1d1d1f; }
+  .note { font-size: .85rem; color: #666; margin-top: 6px; line-height: 1.4; }
+  #copied { color: #188038; font-weight: 600; min-height: 1.2em; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>Send Us Your Documents</h1>
+    <p class="sub">Tap the email app you use. A draft will open already addressed to us — just attach your files and send.</p>
+
+    <!-- No target attribute on purpose: the link must open in this same tab
+         so Chrome on iPhone will hand it off to the app. -->
+    <a class="btn mail" id="btn-mail"
+       href="mailto:info@libertygreenfield.com?subject=Liberty%20Greenfield%20Documents%20Requested&amp;body=Files%20requested">
+       iPhone Mail / Default Mail App</a>
+
+    <a class="btn gmail" id="btn-gmail"
+       href="googlegmail:///co?to=info@libertygreenfield.com&amp;subject=Liberty%20Greenfield%20Documents%20Requested&amp;body=Files%20requested">
+       Open in Gmail</a>
+
+    <a class="btn outlook" id="btn-outlook"
+       href="ms-outlook://compose?to=info@libertygreenfield.com&amp;subject=Liberty%20Greenfield%20Documents%20Requested&amp;body=Files%20requested">
+       Open in Outlook</a>
+
+    <a class="btn yahoo" id="btn-yahoo"
+       href="ymail://mail/compose?to=info@libertygreenfield.com&amp;subject=Liberty%20Greenfield%20Documents%20Requested&amp;body=Files%20requested">
+       Open in Yahoo Mail</a>
+
+    <div class="divider">— or email us directly —</div>
+    <div class="email" id="addr">info@libertygreenfield.com</div>
+    <button class="btn copy" id="copy" type="button">Copy Email Address</button>
+    <div id="copied"></div>
+    <p class="note">Nothing happened when you tapped? Copy our address above and paste it into a new email in any app.</p>
+  </div>
+
+<script>
+  var ADDRESS = "info@libertygreenfield.com";
+  var MAILTO = "mailto:info@libertygreenfield.com?subject=Liberty%20Greenfield%20Documents%20Requested&body=Files%20requested";
+
+  // The googlegmail://, ms-outlook:// and ymail:// links are iPhone-only.
+  // On Android (and computers), point those buttons at mailto:, which shows
+  // the device's own "choose an email app" menu.
+  var isIOS = /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+              (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  if (!isIOS) {
+    ["btn-gmail", "btn-outlook", "btn-yahoo"].forEach(function (id) {
+      document.getElementById(id).href = MAILTO;
+    });
+  }
+
+  document.getElementById("copy").addEventListener("click", function () {
+    var done = function () {
+      document.getElementById("copied").textContent = "Copied! Paste it into a new email.";
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(ADDRESS).then(done, fallback);
+    } else {
+      fallback();
+    }
+    function fallback() {
+      var t = document.createElement("textarea");
+      t.value = ADDRESS;
+      t.setAttribute("readonly", "");
+      t.style.position = "absolute";
+      t.style.left = "-9999px";
+      document.body.appendChild(t);
+      t.select();
+      t.setSelectionRange(0, ADDRESS.length);
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      document.body.removeChild(t);
+    }
+  });
+</script>
+</body>
+</html>
